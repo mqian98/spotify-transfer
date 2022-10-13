@@ -11,20 +11,21 @@ import time
 # 2. Install requests on command line with `pip install requests`
 
 # Steps
-# 1. Get your auth tokens using the directions below
+# 1. Get your authentication (OAuth) tokens using the directions below
+# 2. Update the variables `prev_account_auth` and `curr_account_auth` with the auth tokens that you obtained 
 # 2. Go to the bottom of the file and uncomment the line for adding your liked songs from the old account to new account
 # 3, Run this file. `python transfer_tracks.py`
 # 4. Follow instructions that pop up when you run the program
 # 5. If there are errors, let me know
 
 # OAuth token for getting liked songs 
-# obtain OAuth here: https://developer.spotify.com/console/get-current-user-saved-tracks/
+# obtain OAuth token here: https://developer.spotify.com/console/get-current-user-saved-tracks/
 # click `Get Token`, select the option for `user-library-read`, and copy the token here
 # make sure you are logged in with your ```old``` account on the Spotify website when you get the token 
 prev_account_auth = 'replace me with auth token for old account'
 
 # OAuth token for setting liked songs
-# obtain OAuth here: https://developer.spotify.com/console/put-current-user-saved-tracks/
+# obtain OAuth token here: https://developer.spotify.com/console/put-current-user-saved-tracks/
 # click `Get Token`, select the option for `user-library-modify`, and copy the token here
 # make sure you are logged in with your ```new``` account on the Spotify website when you get the token 
 curr_account_auth = 'replace me with auth token for new account'
