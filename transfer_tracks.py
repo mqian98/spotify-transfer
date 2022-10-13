@@ -5,15 +5,17 @@ import math
 from functools import reduce
 import time
 
+
 # Pre-reqs
-# 1. Install python
+# 1. Install python: https://www.python.org/downloads/
 # 2. Install requests on command line with `pip install requests`
 
 # Steps
 # 1. Get your auth tokens using the directions below
 # 2. Go to the bottom of the file and uncomment the line for adding your liked songs from the old account to new account
-# 3, Run this file `python transfer_tracks.py`
-# 4. If you need to delete the liked songs you've transfered from your old account, then uncomment the line at the bottom of the file related to deleting your liked songs and re-run this file
+# 3, Run this file. `python transfer_tracks.py`
+# 4. Follow instructions that pop up when you run the program
+# 5. If there are errors, let me know
 
 # OAuth token for getting liked songs 
 # obtain OAuth here: https://developer.spotify.com/console/get-current-user-saved-tracks/
@@ -69,7 +71,8 @@ def get_liked_tracks(auth=prev_account_auth, limit=50):
     print('Total tracks found: {}'.format(len(liked_tracks)))
     print('Oldest track: {}'.format(liked_tracks[0]))
     print('Newest track: {}'.format(liked_tracks[-1]))
-    
+    print()
+
     return liked_tracks
 
 
@@ -111,10 +114,11 @@ def modify_liked_tracks(tracks, auth, limit=50, sleep_duration=None, set_tracks=
     return True
 
 
-def set_liked_tracks(tracks, auth=curr_account_auth, sleep_duration):
+def set_liked_tracks(tracks, sleep_duration, auth=curr_account_auth):
     success = modify_liked_tracks(tracks, auth, limit=1, sleep_duration=sleep_duration, set_tracks=True)
     if success:
         print('Completed adding tracks to liked songs')
+        print('If the song order looks incorrect, re-run this and use a longer duration to wait between adding songs')
 
 
 def delete_liked_tracks(tracks, auth=curr_account_auth):
@@ -123,16 +127,35 @@ def delete_liked_tracks(tracks, auth=curr_account_auth):
         print('Completed deleting tracks from liked songs')
 
 
+ADD_SELECTION = 'add'
+DELETE_SELECTION = 'delete'
 if __name__ == '__main__':
-    prev_liked_tracks = get_liked_tracks()
-    
-    # uncomment the line below to delete the liked songs you've added from your old account 
-    #delete_liked_tracks(prev_liked_tracks, curr_account_auth)
+    user_selection = input('Type "add" and then enter to add songs from old account to new account.\nType "delete" and then enter to remove the songs you added from the old account.\nEnter anything else to exit the program.\n').strip()
+    print()
 
-    # the line below adds the liked songs from your old account to your new account. 
-    # if you see songs getting added in the wrong order, uncomment the line above with `delete_liked_tracks(...)` to delete all the songs
-    # then set `sleep_duration` in the function call below to a higher value
-    # then save and re-run this file with `python transfer_tracks.py`
-    # `sleep_duration` is denoted in seconds
-    set_liked_tracks(prev_liked_tracks, sleep_duration=0.1)
+    if user_selection != ADD_SELECTION and user_selection != DELETE_SELECTION:
+        print('Exiting program')
+        exit()
+
+    
+    # the next few lines deletes the liked songs you've added from your old account 
+    if user_selection == DELETE_SELECTION:
+        prev_liked_tracks = get_liked_tracks()
+        delete_liked_tracks(prev_liked_tracks, curr_account_auth)
+
+    # the rest of the code below adds the liked songs from your old account to your new account. 
+    # if you see songs getting added in the wrong order, re-run the code and select "delete" to delete all the songs
+    # then run the code again and select "add" and use a higher wait duration
+    duration = input('Optional: Enter a number (in seconds) to specify the duration to wait before adding another song.\nThe longer the wait, the more likely your songs will be added in the correct order.\nPress enter to use default value of 0.2 seconds.\n')
+    print()
+
+    try:
+        duration = float(duration)
+    except:
+        print('Unable to convert your input to a number. Using default value of 0.2 seconds')
+        duration = 0.2
+
+    if user_selection == ADD_SELECTION:
+        prev_liked_tracks = get_liked_tracks()
+        set_liked_tracks(prev_liked_tracks, sleep_duration=duration)
 
