@@ -35,7 +35,7 @@ PREV_ACCOUNT_AUTH = "replace this text between quotes with auth token for your o
 CURR_ACCOUNT_AUTH = "replace this text between quotes with auth token for your new account"
 
 
-# Toggles on testing mode. Set to true to not modify user accounts
+# Toggles on testing mode. Set to True to not modify user accounts
 TESTING = False
 
 # Deletes the last n lines in the STDOUT
