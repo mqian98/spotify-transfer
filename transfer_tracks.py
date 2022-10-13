@@ -79,24 +79,25 @@ def get_liked_tracks(auth=PREV_ACCOUNT_AUTH, limit=50):
         for track_data in json_response['items']:
             id = track_data['track']['id']
             name = track_data['track']['name']
-            liked_tracks.append((id, name))
+            date = track_data['added_at']
+            liked_tracks.append((id, date, name))
         
         url = json_response['next']
         delete_prints(n=1)
 
-    liked_tracks.reverse()
+    liked_tracks.sort(key = lambda track_data: datetime.strptime(track_data[1], '%Y-%m-%dT%H:%M:%SZ'))
 
     print()
     print('Completed finding liked tracks')
     print('Total tracks found: {}'.format(len(liked_tracks)))
-    print('Oldest track: {}'.format(liked_tracks[0][1]))
-    print('Newest track: {}'.format(liked_tracks[-1][1]))
+    print('Oldest track: {}'.format(liked_tracks[0][2]))
+    print('Newest track: {}'.format(liked_tracks[-1][2]))
     print()
 
     current_date = datetime.now().strftime("%Y%m%d-%H:%M:%S")
     with open('liked_songs_{}.txt'.format(current_date), 'w') as f:
-        for track in liked_tracks:
-            f.write('{}\t{}\n'.format(track[0], track[1]))
+        for track_data in liked_tracks:
+            f.write('{}\t{}\t{}\n'.format(*track_data))
 
     return liked_tracks
 
