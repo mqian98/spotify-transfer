@@ -24,7 +24,7 @@ from datetime import datetime
 # 2. Obtain OAuth token here: https://developer.spotify.com/console/get-current-user-saved-tracks/
 # 3. Click `Get Token`, select the option for `user-library-read`
 # 4. Copy the token to the text below
-prev_account_auth = "replace this text between quotes with auth token for your old account"
+PREV_ACCOUNT_AUTH = "replace this text between quotes with auth token for your old account"
 
 # OAuth token for setting liked songs
 # Steps:
@@ -32,11 +32,11 @@ prev_account_auth = "replace this text between quotes with auth token for your o
 # 2. Obtain OAuth token here: https://developer.spotify.com/console/put-current-user-saved-tracks/
 # 3. Click `Get Token`, select the option for `user-library-modify`
 # 4. Copy the token to the text below
-curr_account_auth = "replace this text between quotes with auth token for your new account"
+CURR_ACCOUNT_AUTH = "replace this text between quotes with auth token for your new account"
 
 
 # Toggles on testing mode. Set to true to not modify user accounts
-TESTING = True
+TESTING = False
 
 # Deletes the last n lines in the STDOUT
 def delete_prints(n=1):
@@ -58,7 +58,7 @@ def get_headers(auth):
 
 # Gets liked tracks from a user's account
 # Returns a list of (song_id, song_name) tuples
-def get_liked_tracks(auth=prev_account_auth, limit=50):
+def get_liked_tracks(auth=PREV_ACCOUNT_AUTH, limit=50):
     get_liked_tracks_url = 'https://api.spotify.com/v1/me/tracks?market=US&limit={}&offset={}' 
 
     liked_tracks = []
@@ -142,7 +142,7 @@ def modify_liked_tracks(tracks, auth, limit=50, sleep_duration=None, set_tracks=
     return True
 
 
-def set_liked_tracks(sleep_duration, auth=curr_account_auth):
+def set_liked_tracks(sleep_duration, auth=CURR_ACCOUNT_AUTH):
     prev_liked_tracks = get_liked_tracks()
     
     should_continue = input('If the following looks correct, enter `yes` to continue. Enter anything else to exit the program.\n')
@@ -158,7 +158,7 @@ def set_liked_tracks(sleep_duration, auth=curr_account_auth):
         print('If the song order looks incorrect, re-run this and use a longer duration to wait between adding songs')
 
 
-def delete_liked_tracks(auth=curr_account_auth):
+def delete_liked_tracks(auth=CURR_ACCOUNT_AUTH):
     prev_liked_tracks = get_liked_tracks()
     
     should_continue = input('If the following looks correct, enter `yes` to continue. Enter anything else to exit the program.\n')
@@ -189,7 +189,7 @@ if __name__ == '__main__':
     
     # the next few lines deletes the liked songs you've added from your old account 
     if user_selection == DELETE_SELECTION:
-        delete_liked_tracks(curr_account_auth)
+        delete_liked_tracks()
 
     # the rest of the code below adds the liked songs from your old account to your new account. 
     # if you see songs getting added in the wrong order, re-run the code and select "delete" to delete all the songs
