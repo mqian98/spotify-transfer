@@ -13,7 +13,7 @@ import time
 # 1. Get your auth tokens using the directions below
 # 2. Go to the bottom of the file and uncomment the line for adding your liked songs from the old account to new account
 # 3, Run this file `python transfer_tracks.py`
-# 4. If you need to delete the liked songs you've transfered from your old account, then uncomment the line at the bottom of the file to delete your liked songs and re-comment out the line for adding liked songs
+# 4. If you need to delete the liked songs you've transfered from your old account, then uncomment the line at the bottom of the file related to deleting your liked songs and re-run this file
 
 # OAuth token for getting liked songs 
 # obtain OAuth here: https://developer.spotify.com/console/get-current-user-saved-tracks/
@@ -38,7 +38,7 @@ def get_headers(auth):
     return headers 
 
 
-def get_liked_tracks(auth, limit=50):
+def get_liked_tracks(auth=prev_account_auth, limit=50):
     get_liked_tracks_url = 'https://api.spotify.com/v1/me/tracks?market=US&limit={}&offset={}' 
 
     liked_tracks = []
@@ -58,13 +58,18 @@ def get_liked_tracks(auth, limit=50):
             id = track_data['track']['id']
             name = track_data['track']['name']
             liked_tracks.append((id, name))
+        
         url = json_response['next']
+        print('Found {} tracks'.format(len(liked_tracks)))
 
-    # pprint(liked_tracks)
     liked_tracks.reverse()
-    print('Found {} tracks'.format(len(liked_tracks)))
+
+    print()
+    print('Completed finding liked tracks')
+    print('Total tracks found: {}'.format(len(liked_tracks)))
     print('Oldest track: {}'.format(liked_tracks[0]))
     print('Newest track: {}'.format(liked_tracks[-1]))
+    
     return liked_tracks
 
 
@@ -78,7 +83,7 @@ def modify_liked_tracks(tracks, auth, limit=50, sleep_duration=None, set_tracks=
     for i in range(num_bins):
         start_idx = i*limit
         end_idx = (i+1)*limit
-        print("Sending tracks {}-{}. set={}, delete={}".format(start_idx+1, end_idx, set_tracks, delete_tracks))
+        print("Sending tracks [{}-{}). set={}, delete={}".format(start_idx, end_idx, set_tracks, delete_tracks))
 
         # a list of `limit` number of tracks
         tracks_subset = tracks[start_idx:end_idx]
@@ -96,30 +101,38 @@ def modify_liked_tracks(tracks, auth, limit=50, sleep_duration=None, set_tracks=
 
         if output.status_code != 200:
             print('ERROR: Failed to set liked tracks: {}'.format(output.text))
-            return 
+            return False 
         
         # need slight delay because the PUT request returning a status code is async from when the song gets added to the Liked Songs list 
         # without the delay some songs will get added in the wrong order
         if sleep_duration:
             time.sleep(sleep_duration)
-        
-    print('Completed adding tracks to liked songs')
+    
+    return True
 
 
-def set_liked_tracks(tracks, auth, sleep_duration=0.1):
-    modify_liked_tracks(tracks, auth, limit=1, sleep_duration=sleep_duration, set_tracks=True)
+def set_liked_tracks(tracks, auth=curr_account_auth, sleep_duration):
+    success = modify_liked_tracks(tracks, auth, limit=1, sleep_duration=sleep_duration, set_tracks=True)
+    if success:
+        print('Completed adding tracks to liked songs')
 
 
-def delete_liked_tracks(tracks, auth):
-    modify_liked_tracks(tracks, auth, delete_tracks=True)
+def delete_liked_tracks(tracks, auth=curr_account_auth):
+    success = modify_liked_tracks(tracks, auth, delete_tracks=True)
+    if success:
+        print('Completed deleting tracks from liked songs')
 
 
 if __name__ == '__main__':
-    prev_liked_tracks = get_liked_tracks(prev_account_auth)
+    prev_liked_tracks = get_liked_tracks()
     
-    # uncomment the line below to add the liked songs from your old account to your new account. if you see songs getting added in the wrong order, run `delete_liked_tracks()` to delete all the songs, and then re-run `set_liked_tracks()` with a higher `sleep_duration`. default value is 0.1s
-    # set_liked_tracks(prev_liked_tracks, curr_account_auth, sleep_duration=0.1)
-
     # uncomment the line below to delete the liked songs you've added from your old account 
-    # delete_liked_tracks(prev_liked_tracks, curr_account_auth)
-    
+    #delete_liked_tracks(prev_liked_tracks, curr_account_auth)
+
+    # the line below adds the liked songs from your old account to your new account. 
+    # if you see songs getting added in the wrong order, uncomment the line above with `delete_liked_tracks(...)` to delete all the songs
+    # then set `sleep_duration` in the function call below to a higher value
+    # then save and re-run this file with `python transfer_tracks.py`
+    # `sleep_duration` is denoted in seconds
+    set_liked_tracks(prev_liked_tracks, sleep_duration=0.1)
+
