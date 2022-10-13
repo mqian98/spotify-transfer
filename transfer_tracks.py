@@ -20,7 +20,7 @@ from datetime import datetime
 
 # OAuth token for getting liked songs 
 # Steps:
-# 1. Log into https://open.spotify.com/ with your old account
+# 1. Log into https://open.spotify.com/ with your `old` account
 # 2. Obtain OAuth token here: https://developer.spotify.com/console/get-current-user-saved-tracks/
 # 3. Click `Get Token`, select the option for `user-library-read`
 # 4. Copy the token to the text below
@@ -28,7 +28,7 @@ PREV_ACCOUNT_AUTH = "replace this text between quotes with auth token for your o
 
 # OAuth token for setting liked songs
 # Steps:
-# 1. Log into https://open.spotify.com/ with your old account
+# 1. Log into https://open.spotify.com/ with your `new` account
 # 2. Obtain OAuth token here: https://developer.spotify.com/console/put-current-user-saved-tracks/
 # 3. Click `Get Token`, select the option for `user-library-modify`
 # 4. Copy the token to the text below
