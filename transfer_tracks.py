@@ -36,7 +36,7 @@ curr_account_auth = "replace this text between quotes with auth token for your n
 
 
 # Toggles on testing mode. Set to true to not modify user accounts
-TESTING = False
+TESTING = True
 
 # Deletes the last n lines in the STDOUT
 def delete_prints(n=1):
@@ -189,20 +189,20 @@ if __name__ == '__main__':
     
     # the next few lines deletes the liked songs you've added from your old account 
     if user_selection == DELETE_SELECTION:
-        delete_liked_tracks(prev_liked_tracks, curr_account_auth)
+        delete_liked_tracks(curr_account_auth)
 
     # the rest of the code below adds the liked songs from your old account to your new account. 
     # if you see songs getting added in the wrong order, re-run the code and select "delete" to delete all the songs
     # then run the code again and select "add" and use a higher wait duration
-    duration = input('Optional: Enter a number (in seconds) to specify the duration to wait between adding songs.\nThe longer the wait, the more likely your songs will be added in the correct order.\nPress enter to use default value of 0.2 seconds.\n')
-    print()
-
-    try:
-        duration = float(duration)
-    except:
-        print('Unable to convert your input to a number. Using default value of 0.2 seconds')
-        duration = 0.2
-
     if user_selection == ADD_SELECTION:
+        duration = input('Optional: Enter a number (in seconds) to specify the duration to wait between adding songs.\nThe longer the wait, the more likely your songs will be added in the correct order.\nPress enter to use default value of 0.2 seconds.\n')
+        print()
+
+        try:
+            duration = float(duration)
+        except:
+            print('Unable to convert your input to a number. Using default value of 0.2 seconds')
+            duration = 0.2
+
         set_liked_tracks(sleep_duration=duration)
 
