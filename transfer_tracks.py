@@ -8,7 +8,7 @@ import time
 
 # Pre-reqs
 # 1. Install python: https://www.python.org/downloads/
-# 2. Install requests on command line with `pip install requests`
+# 2. Install the `requests` library on command line with `pip install requests`
 
 # Steps
 # 1. Get your authentication (OAuth) tokens using the directions below
