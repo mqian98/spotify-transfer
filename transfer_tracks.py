@@ -15,9 +15,8 @@ from datetime import datetime
 # 1. Press Ctrl+S/Cmd+S to download this file
 # 2. Get your authentication (OAuth) tokens using the directions below
 # 3. Update the variables `PREV_ACCOUNT_AUTH` and `CURR_ACCOUNT_AUTH` with the auth tokens that you obtained 
-# 4. Go to the bottom of the file and uncomment the line for adding your liked songs from the old account to new account
-# 5, Run this file. `python transfer_tracks.py`
-# 6. Follow instructions that pop up when you run the program
+# 4, Run this file. `python transfer_tracks.py`
+# 5. Follow instructions that pop up when you run the program
 
 # OAuth token for getting liked songs 
 # Steps:
