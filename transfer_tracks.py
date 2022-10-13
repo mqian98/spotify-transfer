@@ -57,7 +57,7 @@ def get_headers(auth):
 
 
 # Gets liked tracks from a user's account
-# Returns a list of (song_id, song_name) tuples
+# Returns a list of (song_id, date_added, song_name) tuples
 def get_liked_tracks(auth=PREV_ACCOUNT_AUTH, limit=50):
     get_liked_tracks_url = 'https://api.spotify.com/v1/me/tracks?market=US&limit={}&offset={}' 
 
@@ -102,7 +102,7 @@ def get_liked_tracks(auth=PREV_ACCOUNT_AUTH, limit=50):
     return liked_tracks
 
 
-# Takes in a list of (song_id, song_name) tuples and either sets or deletes them from a user's account
+# Takes in a list of (song_id, date_added, song_name) tuples and either sets or deletes them from a user's account
 def modify_liked_tracks(tracks, auth, limit=50, sleep_duration=None, set_tracks=False, delete_tracks=False):
     modify_liked_tracks_url = 'https://api.spotify.com/v1/me/tracks?ids={}'
     
